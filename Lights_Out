@@ -1,0 +1,165 @@
+Lights_Out {
+    	//Initialization global variables
+    	static ArrayList<Integer> a=new ArrayList<Integer>();
+    	static int k=0; 						// Calling variable for build
+    	static int k2=0;						// looping variable
+    	static int[][] final_goal;				// goal to be achieved all lights off
+    	static int[] current_state;
+    	static int[][] Initial_ON;				// Lights which are to be turned on initially
+    	static int[] hint_vector;
+    	static int ok = 1;					// variable for checking whether goal is achieved
+    	static int i=0;
+    	static int j=0;
+    	static  int[][] hint_matrix = {
+			    { 0,1,1,1,0,0,0,1,0,1,0,0,0,1,1,0,0,0,0,1,0,0,0 },
+			    { 1,1,0,1,1,0,1,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,0 },
+			    { 1,0,1,1,1,1,0,1,1,0,0,0,1,1,0,1,1,1,1,1,0,1,0 },
+			    { 1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1 },
+			    { 0,1,1,0,1,1,0,0,0,0,1,0,1,0,1,0,0,1,0,1,1,1,0 },
+			    { 0,0,1,0,1,0,1,1,0,1,0,0,1,0,0,0,0,0,1,1,0,0,0 },
+			    { 0,1,0,1,0,1,1,0,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0 },
+			    { 1,0,1,0,0,1,0,1,1,0,0,0,0,0,1,1,0,1,0,1,1,0,1 },
+			    { 0,0,1,0,0,0,1,1,1,0,1,0,0,1,1,1,0,0,1,0,0,1,1 },
+			    { 1,0,0,0,0,1,1,0,0,0,1,0,1,0,1,0,1,1,0,1,0,0,1 },
+			    { 0,0,0,0,1,0,0,0,1,1,0,0,1,0,1,1,1,1,1,0,0,1,0 },
+			    { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1 },
+			    { 0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,0,0,1,1,0 },			//Using for solution
+			    { 1,1,1,0,0,0,1,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0 },
+			    { 1,1,0,0,1,0,0,1,1,1,1,0,0,1,1,1,1,0,1,0,1,0,0 },
+			    { 0,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,0,1,0,1,1,0,1 },
+			    { 0,0,1,1,0,0,1,0,0,1,1,1,0,0,1,0,1,1,1,0,0,0,1 },
+			    { 0,0,1,0,1,0,1,1,0,1,1,0,1,0,0,1,1,0,1,1,1,0,0 },
+			    { 0,1,1,0,0,1,0,0,1,0,1,0,0,1,1,0,1,1,1,0,0,0,1 },
+			    { 1,0,1,0,1,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,1,0,1 },
+			    { 0,0,0,1,1,0,0,1,0,0,0,1,1,0,1,1,0,1,0,1,1,1,0 },
+			    { 0,0,1,1,1,0,1,0,1,0,1,1,1,0,0,0,0,0,0,0,1,1,1 },
+			    { 0,0,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,0,1,1,0,1,0 } 
+    };
+main(String[] args)
+{
+	  //Initialization of  local variable
+  	Initial_ON=new int[5][5];
+    final_goal=new int[5][5];
+	  current_state=new int[23];
+	  hint_vector=new int[23];
+    final_goal[3][4] = 0;
+	  final_goal[4][4] = 0;
+	  while(i<0)
+    {
+        while(j<0)
+        {
+          // Initializing the whole matrix to zero
+			    Initial_ON[i][j]=0;
+          j++;
+        }i++;
+    }
+	// Lights to be turned on
+	Initial_ON[0][0]=1;
+	Initial_ON[1][2]=1;
+	Initial_ON[2][3]=1;
+	for(i=0; i < 23; i++)
+	{
+	    	hint_vector[i] = 0;
+	    	if(Initial_ON[i%5][i/5]==0)
+                		current_state[i] = 0;
+	    	else
+                		current_state[i] = 1;
+	}
+	
+	for(i=0; i < 23; i++)
+	{
+	    	for(int j=0; j < 23; j++)
+	    	{
+			//calculating hint
+                		hint_vector[i] = (hint_vector[i] + current_state[j] * hint_matrix[i][j])%2;
+	    	}
+        	}
+       	 for(i=0; i < 23; i++)
+	    	final_goal[i%5][i/5] = hint_vector[i];
+	  
+        	build(1);
+	if(ok==0)
+  {
+      Print no solution available
+  }
+  else
+  {
+		  Print solutions
+      for(int m=0;m<final_goal.length;m++)
+      {
+			    for(int j=0;j<final_goal[m].length;j++)
+			    {
+		    		  a.add(k, final_goal[m][j]);
+		    	    k++;
+			    }
+      }
+      Print “{“
+      for(int n=0;n<a.size();n++)
+      {
+			    if(a.get(n)==1)
+			    {
+		    		  Print output matrix having value 1’s i.e. (n+1)
+			    }
+      }   
+      Print “}”        
+    }
+}
+
+// Now we must attempt the solution to find out if it is a ligitimat solution
+  //build implementation
+    build(int k)
+    {
+        	boolean done=false;
+          int k2=hint_vector.length;
+        	while(!done && k2>0)        	
+          {
+            		for(int i=0; i < 5; i++)
+            		{
+                		for(int j=0; j < 5; j++)
+                		{
+                    			if(final_goal[i][j] == 1)
+                   			 {
+	    				                lightselect(Initial_ON, j, i);
+	    			              }
+                		}
+            		}
+            		for(i=0;i<5;i++)
+            		{
+               		 for(j=0;j<5;j++)
+                		{
+                   			 if(Initial_ON[i][j] == 0)
+                    			{
+                        				ok=1;
+                        				done=true;
+                    			}
+                    			else if(k<k2)
+                    			{ 
+                        				build(k+1);
+                    			}
+                		}
+           		 }
+	        k2--;
+        	}
+}
+
+
+lightselect(int[][] result, int xselect, int yselect)
+{
+	inverse(result, xselect, yselect);
+	inverse(result, xselect-1, yselect);
+	inverse(result, xselect+1, yselect);
+	inverse(result, xselect, yselect-1);
+	inverse(result, xselect, yselect+1);
+}
+ 
+inverse(int[][] matrix, int xselect, int yselect)
+{
+	if(xselect < 0 || xselect > 4 || yselect < 0 || yselect > 4)
+            		return;
+        	if(matrix[yselect][xselect] == 0)
+            		matrix[yselect][xselect] = 1;
+	else
+            		matrix[yselect][xselect] = 0;
+ }
+
+}
